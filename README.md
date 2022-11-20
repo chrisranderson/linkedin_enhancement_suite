@@ -7,6 +7,3 @@ Fix everything Bad about LinkedIn
 - https://developer.chrome.com/docs/extensions/mv3/architecture-overview/
 - https://developer.chrome.com/docs/extensions/mv3/devguide/
 - https://developer.chrome.com/docs/extensions/reference/
-
-kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
-dddddddddddddddddddddddddddd
