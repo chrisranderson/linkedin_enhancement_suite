@@ -25,9 +25,9 @@ looking for new opportunit
 accepted an offer
 Promoted
  */
+const APPLICATION_CONTAINER_SELECTOR = ".app-aware-link"
 const INFINITE_SCROLL_CONTAINER_SELECTOR = ".scaffold-finite-scroll__content"
 const DEBUGGING = true
-    
 
 const SEARCH_SELECTORS = [
     ".feed-shared-update-v2__description-wrapper",
@@ -37,6 +37,25 @@ const SEARCH_SELECTORS = [
     ".update-components-text"
 ]
 
+const MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
+
+wait_for_element_by_selector(INFINITE_SCROLL_CONTAINER_SELECTOR).then(function () {
+    main()
+})
+
+wait_for_element_by_selector(APPLICATION_CONTAINER_SELECTOR).then(function () {
+    let app_observer = new MutationObserver(function (mutations, observer) {
+        print(`${APPLICATION_CONTAINER_SELECTOR} changed.`)
+        main()
+    })
+    let app_container = document.querySelector(APPLICATION_CONTAINER_SELECTOR)
+    app_observer.observe(app_container, {
+        attributes: true
+    })
+})
+
+let feed_observer = null
+
 function main () {
     print("Running main.")
     let patterns = []
@@ -44,10 +63,9 @@ function main () {
     if (!infinite_scroll_container) {
         print("ERROR: could not find infinite_scroll_container.")
     }
-    let MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
     
     let last_trigger_time = 0
-    let feed_observer = new MutationObserver(function(mutations, observer) {
+    feed_observer = new MutationObserver(function(mutations, observer) {
         print("Feed observer triggered.")
         let current_trigger_time = Date.now()
         if (current_trigger_time - last_trigger_time < 1000) {
@@ -124,6 +142,3 @@ function delete_bad_cards (new_cards, patterns) {
     })
 }
 
-wait_for_element_by_selector(INFINITE_SCROLL_CONTAINER_SELECTOR).then(function () {
-    main()
-})
