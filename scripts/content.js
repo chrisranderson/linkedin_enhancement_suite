@@ -45,7 +45,6 @@ function start () {
         get_muted_phrases_list(function (saved_patterns) {
             patterns = saved_patterns.map(function (pattern) {
                 regex = new RegExp(pattern)
-                debugger
                 return regex
             })
             print("Loaded patterns:", patterns)
