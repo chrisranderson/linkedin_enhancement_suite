@@ -40,15 +40,6 @@ const SEARCH_SELECTORS = [
 function main () {
     print("Running main.")
     let patterns = []
-    
-    get_muted_phrases_list(function (saved_patterns) {
-        patterns = saved_patterns.map(function (pattern) {
-            regex = new RegExp(pattern)
-            return regex
-        })
-        print("Loaded patterns:", patterns)
-    })
-    
     let infinite_scroll_container = document.querySelector(INFINITE_SCROLL_CONTAINER_SELECTOR)
     if (!infinite_scroll_container) {
         print("ERROR: could not find infinite_scroll_container.")
@@ -57,6 +48,7 @@ function main () {
     
     let last_trigger_time = 0
     let feed_observer = new MutationObserver(function(mutations, observer) {
+        print("Feed observer triggered.")
         let current_trigger_time = Date.now()
         if (current_trigger_time - last_trigger_time < 1000) {
             return
@@ -67,16 +59,30 @@ function main () {
         //     return Array.from(mutation_record.addedNodes)
         // })).flat(1)
         let all_cards = Array.from(document.querySelectorAll(`${INFINITE_SCROLL_CONTAINER_SELECTOR} > div`))
-        delete_bad_cards(all_cards, patterns)
+        let cards_below_my_scroll_position = all_cards.filter(function (card) {
+            return card.getBoundingClientRect().y >= -100;
+        })
+        delete_bad_cards(cards_below_my_scroll_position, patterns)
     });
     
     feed_observer.observe(infinite_scroll_container, {
         childList: true,
         subtree: true,
     });
-    let all_cards = Array.from(document.querySelectorAll(`${INFINITE_SCROLL_CONTAINER_SELECTOR} > div`))
+    
+    print(`Feed observer '${feed_observer}' is observing '${infinite_scroll_container}'`)
+    
+    get_muted_phrases_list(function (saved_patterns) {
+        patterns = saved_patterns.map(function (pattern) {
+            regex = new RegExp(pattern)
+            return regex
+        })
+        print("Loaded patterns:", patterns)
+        
+        let all_cards = Array.from(document.querySelectorAll(`${INFINITE_SCROLL_CONTAINER_SELECTOR} > div`))
+        delete_bad_cards(all_cards, patterns)
+    })
 
-    delete_bad_cards(all_cards, patterns)
 }
 
 function delete_bad_cards (new_cards, patterns) {
