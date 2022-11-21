@@ -16,3 +16,23 @@ function get_muted_phrases_list (result_callback) {
 function print(...message) {
     console.error("extension debug:", ...message)
 }
+
+function wait_for_element_by_selector (selector) {
+    return new Promise(resolve => {
+        if (document.querySelector(selector)) {
+            return resolve(document.querySelector(selector));
+        }
+
+        const observer = new MutationObserver(_mutations => {
+            if (document.querySelector(selector)) {
+                resolve(document.querySelector(selector));
+                observer.disconnect();
+            }
+        });
+
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    });
+}
