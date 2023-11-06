@@ -14,7 +14,7 @@ function get_muted_phrases_list (result_callback) {
 }
 
 function print(...message) {
-    console.error("extension debug:", ...message)
+    console.log("extension debug:", ...message)
 }
 
 function wait_for_element_by_selector (selector) {

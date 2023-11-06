@@ -13,8 +13,8 @@
   "content_scripts": [
     {
       "js": [
-        "scripts/content_and_popup_shared.js",
-        "scripts/content.js"
+        "src/js/content_and_popup_shared.js",
+        "src/js/content.js"
       ],
       "matches": [
         "https://*.linkedin.com/*"
@@ -23,7 +23,7 @@
   ],
   
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "src/html/popup.html"
   },
   
   "permissions": [
